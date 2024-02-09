@@ -3,7 +3,8 @@ import {apiError} from '../utils/apiError.js'
 import jwt from 'jsonwebtoken'
 import { User } from "../models/user.model.js";
 
-export const verfiyJWT = asynchandler(async (req, res, next) => {
+const verfiyJWT = asynchandler(async (req, res, next) => {
+    
     try {
         const token = req.cookies?.accessToken || req.headers?.('Authorization')?.split(" ")[1]
         if (!token) {
@@ -19,7 +20,8 @@ export const verfiyJWT = asynchandler(async (req, res, next) => {
         next() 
     } catch (error) {
         throw new apiError(401, 'Unauthorized')
-        console.log(error.message);
     }
     
 })
+
+export {verfiyJWT}
