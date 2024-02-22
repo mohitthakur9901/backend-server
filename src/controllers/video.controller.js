@@ -14,32 +14,47 @@ const getAllVideos = asyncHandler(async (req, res) => {
   sortOptions[sortBy] = sortOrder;
 
   const videos = await Video.aggregate([
-    { $match: { owner: mongoose.Types.ObjectId(userId) } },
     {
-      $lookup: {
-        from: "users",
-        localField: "owner",
-        foreignField: "_id",
-        as: "owner",
-      },
+       $match: { owner: mongoose.Types.ObjectId(userId) },
     },
     {
-      $project: {
-        videoFile: 1,
-        thumbnail: 1,
-        title: 1,
-        description: 1,
-        duration: 1,
-        views: 1,
-        owner: 1,
-        isPublished: 1,
-      }
-    },{
-        $sort:{sortOptions},
-        $skip: (page - 1) * limit,
-        $limit: parseInt(limit),
-    }
-  ]);
+       $project: {
+          videoFile: 1,
+          thumbnail: 1,
+          title: 1,
+          description: 1,
+          duration: 1,
+          views: 1,
+          owner: 1,
+          isPublished: 1,
+       },
+    },
+    {
+       $lookup: {
+          from: "users",
+          localField: "owner",
+          foreignField: "_id",
+          as: "owner",
+       },
+    },
+    {
+       $sort: sortOptions,
+    },
+    {
+       $skip: (page - 1) * limit,
+    },
+    {
+       $limit: parseInt(limit),
+    },
+    {
+       $match: {
+          $and: [
+             { owner: mongoose.Types.ObjectId(userId) },
+             query ? { title: { $regex: new RegExp(query, 'i') } } : {},
+          ],
+       },
+    },
+ ]);
   console.log(videos);
   return res.status(200).json(new ApiResponse(200, videos, "Videos fetched successfully"));
 });
