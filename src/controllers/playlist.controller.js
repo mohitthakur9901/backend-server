@@ -7,7 +7,7 @@ import { Playlist } from '../models/playlist.model.js';
 const createPlaylist = asyncHandler(async (req, res) => {
     const {name, description} = req.body
     const {videoId} = req.params
-    const existingPlaylist = await Playlist.find({name})
+    const existingPlaylist = await Playlist.findOne({name: name})
     if(existingPlaylist){
         throw new apiError('Playlist already exists', 400)
     }

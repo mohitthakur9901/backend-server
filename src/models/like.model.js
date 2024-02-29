@@ -21,4 +21,17 @@ const likeSchema = new Schema({
     
 }, {timestamps: true})
 
+likeSchema.methods.unliked = async function () {
+    // Find the user by ID and remove the reference
+    await this.model('User').findByIdAndUpdate(this.likedBy, {
+        $pull: { likes: this._id }
+    });
+
+    // Remove the user ID from the Like instance
+    this.likedBy = undefined;
+
+    // Save the changes
+    await this.save();
+};
+
 export const Like = mongoose.model("Like", likeSchema)

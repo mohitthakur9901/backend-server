@@ -41,3 +41,7 @@ License
 This project is open-source, licensed under the ISC License, promoting collaboration and innovation.
 
 We encourage you to explore, contribute, and help evolve this server into an even more impressive and feature-rich experience! For questions or suggestions, feel free to create an issue.
+
+
+
+datamodel link https://app.eraser.io/workspace/YtPqZ1VogxGy1jzIDkzj

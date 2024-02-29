@@ -298,7 +298,7 @@ const getUserChannel = asynchandler(async (req, res) => {
           localField: "_id",
           foreignField: "channel",
           as: "subscribers",
-        }
+        },
       },
       {
         $lookup: {
@@ -306,7 +306,7 @@ const getUserChannel = asynchandler(async (req, res) => {
           localField: "_id",
           foreignField: "subscriber",
           as: "subscribedTo",
-        }
+        },
       },
       {
         $addFields: {
@@ -323,9 +323,9 @@ const getUserChannel = asynchandler(async (req, res) => {
               },
               then: true,
               else: false,
-            }
-          }
-        }
+            },
+          },
+        },
       },
       {
         $project: {
@@ -337,8 +337,8 @@ const getUserChannel = asynchandler(async (req, res) => {
           avatar: 1,
           coverImage: 1,
           email: 1,
-        }
-      }
+        },
+      },
     ]);
 
     if (!channel?.length) {
@@ -358,8 +358,8 @@ const getWatchHistory = asynchandler(async (req, res) => {
   const user = await User.aggregate([
     {
       $match: {
-        _id: req.user._id
-      }
+        _id: req.user._id,
+      },
     },
     {
       $lookup: {
@@ -381,28 +381,27 @@ const getWatchHistory = asynchandler(async (req, res) => {
                     username: 1,
                     avatar: 1,
                     coverImage: 1,
-                  }
-                }
-              ]
-            }
+                  },
+                },
+              ],
+            },
           },
           {
             $addFields: {
               owner: {
                 $first: "$owner",
-              }
-            }
-          }
-        ]
-      }
-    }
+              },
+            },
+          },
+        ],
+      },
+    },
   ]);
 
+  // console.log(user);
   return res
     .status(200)
-    .json(
-      new ApiResponse(200, user[0], "User fetched successfully")
-    );
+    .json(new ApiResponse(200, user, "User fetched successfully"));
 });
 
 export {

@@ -7,21 +7,14 @@ import { Tweet } from '../models/tweet.model.js';
 const createTweet = asyncHandler(async (req, res) => {
     //TODO: create tweet
     const {content} = req.body;
-    const tweet = await Tweet.create({content, user: req.user._id});
+    const tweet = await Tweet.create({content, owner: req.user._id});
     return res.status(201).json(new ApiResponse(201, tweet, "Tweet created successfully"));
 })
 
 const getUserTweets = asyncHandler(async (req, res) => {
     const {userId} = req.params;
-    if (!mongoose.isValidObjectId(userId)) {
-        throw new apiError(400, "Invalid user id");
-    }
-    const tweets = await Tweet.findById({owner:userId})
-    if (!tweets) {
-        throw new apiError(404, "No tweets found");
-    }
+    const tweets = await Tweet.find({owner: userId})
     return res.status(200).json(new ApiResponse(200, tweets, "Tweets fetched successfully"));
-
 })
 
 const updateTweet = asyncHandler(async (req, res) => {
